@@ -1,6 +1,9 @@
-import yfinance as yf
+import yfinance as yf # library to pull stock data from yahoo finance
 import pandas as pd
 
+# :str is a type hint to tell what each argument expects
+# str means it should be a string, "1y" is the default if one is not passed through
+# -> is a return type hint, saying that this function will return a pandas DataFrame
 def fetch_stock_data(ticker: str, period: str = "1y", interval: str = "1d") -> pd.DataFrame:
     """
     Fetch OHLCV data for a given ticker from Yahoo Finance.
@@ -21,6 +24,11 @@ def fetch_stock_data(ticker: str, period: str = "1y", interval: str = "1d") -> p
         a pandas DataFrame — basically a table — with dates as rows and OHLCV as columns
     """
 
+    # yf.download makes a request to the yahoo finance library 
+    # ticker is the is the stock sybol we are passing in
+    # period = period passes the period argument straigt to yfinance
+    # auto_adjust = True means yFinance atuomatically adjusts historical prices so the data is consistent
+    # progress = False hides the progress bar that yfinance prints by default
     raw = yf.download(ticker, period=period, interval=interval, auto_adjust=True, progress=False)
 
     if raw.empty:
