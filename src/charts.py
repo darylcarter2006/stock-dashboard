@@ -3,7 +3,7 @@ import plotly.graph_objects as go  # plotly's lower-level API — gives us full 
 from plotly.subplots import make_subplots  # lets us stack multiple charts in one figure
 
 
-def build_candlestick_chart(df: pd.DataFrame, ticker: str) -> go.Figure:
+def build_candlestick_chart(df: pd.DataFrame, ticker: str, show_sma: bool = True, show_bb: bool = True) -> go.Figure:
     """
     Builds the main price chart with:
         - Candlestick chart (OHLC price action)
@@ -58,54 +58,56 @@ def build_candlestick_chart(df: pd.DataFrame, ticker: str) -> go.Figure:
     # we add the upper and lower bands as lines, then fill between them
     # this shading shows the "normal" price range visually
 
-    # upper band line
-    fig.add_trace(
-        go.Scatter(
-            x=df.index,
-            y=df["BB_Upper"],
-            name="BB Upper",
-            line=dict(color="rgba(173, 216, 230, 0.8)", width=1),  # light blue, slightly transparent
-            showlegend=True
-        ),
-        row=1, col=1
-    )
+    if show_bb:
+        # upper band line
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["BB_Upper"],
+                name="BB Upper",
+                line=dict(color="rgba(173, 216, 230, 0.8)", width=1),
+                showlegend=True
+            ),
+            row=1, col=1
+        )
 
-    # lower band line — fill="tonexty" fills the area between this line and the previous trace
-    fig.add_trace(
-        go.Scatter(
-            x=df.index,
-            y=df["BB_Lower"],
-            name="BB Lower",
-            line=dict(color="rgba(173, 216, 230, 0.8)", width=1),
-            fill="tonexty",                                          # fill between upper and lower band
-            fillcolor="rgba(173, 216, 230, 0.1)",                   # very light blue fill
-            showlegend=True
-        ),
-        row=1, col=1
-    )
+        # lower band line
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["BB_Lower"],
+                name="BB Lower",
+                line=dict(color="rgba(173, 216, 230, 0.8)", width=1),
+                fill="tonexty",
+                fillcolor="rgba(173, 216, 230, 0.1)",
+                showlegend=True
+            ),
+            row=1, col=1
+        )
 
     # --- MOVING AVERAGES ---
-    # SMA 20 — short term trend line
-    fig.add_trace(
-        go.Scatter(
-            x=df.index,
-            y=df["SMA_20"],
-            name="SMA 20",
-            line=dict(color="orange", width=1.5)
-        ),
-        row=1, col=1
-    )
+    if show_sma:
+        # SMA 20 — short term trend line
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["SMA_20"],
+                name="SMA 20",
+                line=dict(color="orange", width=1.5)
+            ),
+            row=1, col=1
+        )
 
-    # SMA 50 — medium term trend line
-    fig.add_trace(
-        go.Scatter(
-            x=df.index,
-            y=df["SMA_50"],
-            name="SMA 50",
-            line=dict(color="purple", width=1.5)
-        ),
-        row=1, col=1
-    )
+        # SMA 50 — medium term trend line
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["SMA_50"],
+                name="SMA 50",
+                line=dict(color="purple", width=1.5)
+            ),
+            row=1, col=1
+        )
 
     # --- ANOMALY MARKERS ---
     # filter down to only rows where is_anomaly is True
