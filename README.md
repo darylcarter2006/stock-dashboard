@@ -2,7 +2,7 @@
 
 An interactive financial analytics dashboard for technical analysis and anomaly detection across US equities. Built with Python and deployed as a live web application via Streamlit.
 
-**[Live Demo →](https://darylcarter2.streamlit.app)**
+**[Live Demo →](https://darylcarterdashboard.streamlit.app/)**
 
 ---
 
